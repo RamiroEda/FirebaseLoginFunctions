@@ -6,15 +6,20 @@ import os = require('os');
 import fs = require('fs');
 import Jimp = require('jimp');
 
+
+const cors = require('cors')({
+    origin: true,
+});
+
 admin.initializeApp(functions.config().firebase);
 
 export const userInfoInit = functions.auth.user().onCreate(async (user : auth.UserRecord, context: functions.EventContext) => {
     const document = admin.firestore().collection('users');
 
     return document.doc(user.uid).set({
-        name: user.displayName ?? 'Usuario',
-        imageUrl: "gs://pruebas-354cc.appspot.com/default/default_profile_pic.png",
-        backgroundImage: "gs://pruebas-354cc.appspot.com/default/default_bg.jpg",
+        name: user.displayName ?? `usuario_${Date.now()}`,
+        imageUrl: "default/default_profile_pic.png",
+        backgroundImage: "default/default_bg.jpg",
     });
 });
 
@@ -22,6 +27,22 @@ export const userInfoDelete = functions.auth.user().onDelete(async (user : auth.
     const document = admin.firestore().collection('users');
 
     return document.doc(user.uid).delete();
+});
+
+
+export const deleteUser = functions.https.onRequest(async (req, res) => {
+    return cors(req, res, async () => {
+        if(req.body.uid){
+            await admin.auth().deleteUser(req.body.uid);
+            res.send({
+                success : true
+            });
+        }else{
+            res.send({
+                success : false
+            });
+        }
+    });
 });
 
 
