@@ -33,7 +33,7 @@ Esta función se ejecuta cada que un usuario crea una cuenta en la aplicación. 
 Esta función se ejecuta cada que un usuario elimina su cuenta en la aplicación. Cuando se ejecuta elimina los datos del usuario en la colección **users**.
 
 
-### userInfoDelete
+### deleteUser
 
 |            | Descripción                                                     |
 |------------|-----------------------------------------------------------------|
